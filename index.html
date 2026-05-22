@@ -33,7 +33,7 @@
 <body>
 
 <div class="login-container">
-    <h2>تسجيل الدخول*</h2>
+    <h2>تسجيل الدخول</h2>
     <form id="loginForm">
         <div class="input-group">
             <label for="username">اسم المستخدم:</label>
@@ -59,17 +59,17 @@
         messageDiv.innerText = "جاري التحقق...";
         messageDiv.style.color = "orange";
 
-        // 🛑 استبدل هذا الرابط برابط الـ API الخاص بك من Oracle APEX
-        // 🟢 الرابط الصحيح والمعدل بالكامل:
-const apiURL = 'https://oracleapex.com/ords/arabworkshop/auth/login';
+        // الرابط المباشر لبيئتك في أوراكل APEX
+        const apiURL = 'https://oracleapex.com/ords/arabworkshop/auth/login';
 
         try {
+            // إرسال البيانات كـ Form URL Encoded لتخطي الـ CORS Preflight
             const response = await fetch(apiURL, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: JSON.stringify({
+                body: new URLSearchParams({
                     username: usernameInput,
                     password: passwordInput
                 })
@@ -80,8 +80,11 @@ const apiURL = 'https://oracleapex.com/ords/arabworkshop/auth/login';
             if (data.status === 'success') {
                 messageDiv.innerText = data.message;
                 messageDiv.style.color = "green";
-                // هنا يمكنك توجيه المستخدم لصفحة أخرى بعد نجاح الدخول
-                // window.location.href = "dashboard.html";
+                
+                // الانتقال إلى صفحة لوحة التحكم بعد ثانية ونصف
+                setTimeout(() => {
+                    window.location.href = "dashboard.html";
+                }, 1500);
             } else {
                 messageDiv.innerText = data.message;
                 messageDiv.style.color = "red";
