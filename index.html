@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 320px;
+        }
+        h2 { text-align: center; color: #333; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 5px; color: #666; }
+        .input-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background-color: #0076d6; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #00569e; }
+        #message { text-align: center; margin-top: 15px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>تسجيل الدخول</h2>
+    <form id="loginForm">
+        <div class="input-group">
+            <label for="username">اسم المستخدم:</label>
+            <input type="text" id="username" required>
+        </div>
+        <div class="input-group">
+            <label for="password">كلمة المرور:</label>
+            <input type="password" id="password" required>
+        </div>
+        <button type="submit">دخول</button>
+    </form>
+    <div id="message"></div>
+</div>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const usernameInput = document.getElementById('username').value;
+        const passwordInput = document.getElementById('password').value;
+        const messageDiv = document.getElementById('message');
+        
+        messageDiv.innerText = "جاري التحقق...";
+        messageDiv.style.color = "orange";
+
+        // 🛑 استبدل هذا الرابط برابط الـ API الخاص بك من Oracle APEX
+        const apiURL = 'https://apex.oracle.com/pls/apex/YOUR_WORKSPACE/auth/login';
+
+        try {
+            const response = await fetch(apiURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: usernameInput,
+                    password: passwordInput
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                messageDiv.innerText = data.message;
+                messageDiv.style.color = "green";
+                // هنا يمكنك توجيه المستخدم لصفحة أخرى بعد نجاح الدخول
+                // window.location.href = "dashboard.html";
+            } else {
+                messageDiv.innerText = data.message;
+                messageDiv.style.color = "red";
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            messageDiv.innerText = "حدث خطأ في الاتصال بالخادم";
+            messageDiv.style.color = "red";
+        }
+    });
+</script>
+</body>
+</html>
